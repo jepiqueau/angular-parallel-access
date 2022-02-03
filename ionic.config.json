@@ -1,0 +1,7 @@
+{
+  "name": "angular-parallel-access",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
