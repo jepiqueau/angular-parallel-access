@@ -11,10 +11,13 @@ export class AppComponent  implements OnInit {
   constructor(private databaseService: DatabaseService) {
   }
   async ngOnInit() {
-    const ret = await this.databaseService.initialize();
-    console.log(`in AppComponent initialize ${ret}`);
-    if(ret) {
+    try {
+      await this.databaseService.initialize();
+      console.log(`in AppComponent initialize`);
+      console.log(`in AppComponent starting runTests`);
       await this.databaseService.runTests();
+    } catch(err) {
+      const msg = err.message ? err.message : err;
     }
   }
 }

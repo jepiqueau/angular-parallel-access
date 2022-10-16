@@ -1,6 +1,13 @@
 {
-	"appId": "com.jeep.app.angular-parallel-access",
+	"appId": "com.jeep.app.angular.parallelaccess",
 	"appName": "angular-parallel-access",
 	"webDir": "www",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"plugins": {
+		"CapacitorSQLite": {
+			"electronWindowsLocation": "C:\\ProgramData\\CapacitorDatabases",
+			"electronMacLocation": "/Volumes/Development_Lacie/Development/CapacitorDatabases",
+			"electronLinuxLocation": "Databases"
+		}
+	}
 }
