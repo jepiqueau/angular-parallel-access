@@ -69,14 +69,14 @@ export class DatabaseService{
         console.log(`isTable2: ${isTable2}`);
         const res2 = isTable2 ? (await this.db.query(`Select Count(*) as count from ${this.t2};`)).values[0].count : 0;
 
-        console.log(res1);
-        console.log(res2);
+        console.log(`number of data: ${res1} in table ${this.t1}`);
+        console.log(`number of data: ${res2} in table ${this.t2}`);
 
         if(res1 > 0) {
-          await this.db.execute(`Delete from ${this.t1}`,true);
+          await this.db.execute(`DELETE FROM ${this.t1};`,true);
         }
         if(res2 > 0) {
-          await this.db.execute(`Delete from ${this.t2}`,true);
+          await this.db.execute(`DELETE FROM ${this.t2};`,true);
         }
         if (!transaction) {
           await this.db.execute('BEGIN TRANSACTION;', false);
