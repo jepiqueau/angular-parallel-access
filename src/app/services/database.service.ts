@@ -35,8 +35,20 @@ export class DatabaseService{
 
         this.db = await this.sqlite.createConnection('test', false, 'no-encryption', 1, false);
         if(this.db != null) {
+          await this.db.open();
+          if (this.platform !== 'android') {
+            await this.db.execute(`PRAGMA journal_mode=WAL;`,false);
+          }
           await this.ensureTablesExist(this.db, this.t1);
           await this.ensureTablesExist(this.db, this.t2);
+          const tableList = await this.db.getTableList();
+          console.log(`in initialize tableList: ${JSON.stringify(tableList)}`);
+          if(tableList.values.length !== 2) {
+            return Promise.reject(`Error: table's list !== 2`);
+          }
+          if (this.isWeb) {
+            await this.sqlite.saveToStore('test');
+          }
           return;
         } else {
           return Promise.reject(`Error: createConnection failed`);
@@ -54,6 +66,7 @@ export class DatabaseService{
         console.log(`isTable1: ${isTable1}`);
         const res1 = isTable1 ? (await this.db.query(`Select Count(*) as count from ${this.t1};`)).values[0].count : 0;
         const isTable2 = (await this.db.isTable(this.t2)).result;
+        console.log(`isTable2: ${isTable2}`);
         const res2 = isTable2 ? (await this.db.query(`Select Count(*) as count from ${this.t2};`)).values[0].count : 0;
 
         console.log(res1);
@@ -95,11 +108,10 @@ export class DatabaseService{
 
     private async ensureTablesExist(db: SQLiteDBConnection, table: string){
       try{
-        await db.open();
-        if (this.platform !== 'android') {
-          await db.execute(`PRAGMA journal_mode=WAL;`,false);
-        }
-        await db.execute(`CREATE TABLE IF NOT EXISTS ${table} (id text, nb number, description text);`,true);
+        console.log(`in ensureTablesExist tableName: ${table}`);
+        const res = await db.execute(`CREATE TABLE IF NOT EXISTS ${table} (id text, nb number, description text);`,true);
+        const isTable = (await this.db.isTable(table)).result;
+        console.log(`in ensureTablesExist '${table}' isTable: ${isTable}`);
         return;
       } catch (err) {
         const msg = err.message ? err.message : err;

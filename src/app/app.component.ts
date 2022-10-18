@@ -12,8 +12,8 @@ export class AppComponent  implements OnInit {
   }
   async ngOnInit() {
     try {
-      await this.databaseService.initialize();
       console.log(`in AppComponent initialize`);
+      await this.databaseService.initialize();
       console.log(`in AppComponent starting runTests`);
       await this.databaseService.runTests();
     } catch(err) {
